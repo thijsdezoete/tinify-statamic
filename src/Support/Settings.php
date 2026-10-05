@@ -21,7 +21,7 @@ class Settings
 
     public function optimizeGlide(): bool
     {
-        return (bool) $this->get('optimize_glide', false);
+        return (bool) $this->get('optimize_glide', true);
     }
 
     public function preserve(): array

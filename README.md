@@ -1,6 +1,6 @@
 # Tinify for Statamic
 
-Automatic image optimization for Statamic 6, powered by the Tinify/TinyPNG API. Supports JPEG, PNG, WebP and AVIF. GIF and SVG files are excluded.
+Automatic image optimization for Statamic 6, powered by the Tinify/TinyPNG API. Supports JPEG, PNG, WebP, AVIF and SVG. GIF files are excluded.
 
 ## Install
 
@@ -20,6 +20,8 @@ TINIFY_API_KEY=your-api-key
 ```
 
 Uploads and file replacements are optimized automatically. Compression normally rewrites the original asset in place, preserving its URL and asset data. Statamic refreshes image metadata and invalidates its Glide cache. Keep backups of originals if you need to retain them: this addon does not create backup copies.
+
+SVG files are compressed in place and keep their `.svg` filenames. Raster format conversion, resizing and metadata-preservation options do not apply to SVGs. Statamic's configured SVG sanitization remains active.
 
 ## Queues
 
@@ -43,20 +45,20 @@ Open **Tools → Addons → Tinify**.
 | Optimize uploads automatically | On | Optimize new uploads and replaced files. |
 | Preserve metadata | None | Optionally retain copyright, creation date and location metadata. |
 | Convert format | Keep original | Opt into WebP, AVIF, or the smallest supported output format. |
-| Optimize Glide images | Off | Compress generated variants after Glide writes them. |
+| Optimize Glide images | On | Compress generated variants after Glide writes them. |
 | Asset containers | All | Limit original-asset optimization to the listed container handles. |
 
 Prefer the environment variable for secrets. Statamic stores addon settings in its settings YAML; a key entered in the CP is not encrypted by this addon and must not be committed to source control.
 
 ### Conversion
 
-Conversion is opt-in because it can change extensions and URLs. Statamic replaces the original asset and updates its managed content references. External or hard-coded URLs are not rewritten. Existing filenames are preserved by choosing a unique sibling name, such as `photo-1.webp`.
+Conversion is opt-in for raster images because it can change extensions and URLs. Statamic replaces the original asset and updates its managed content references. External or hard-coded URLs are not rewritten. The basename is retained (`photo.png` becomes `photo.webp`); a suffix such as `photo-1.webp` is added only if the destination already exists, avoiding overwriting another asset.
 
 Requesting the asset's current format skips the paid conversion step. Without conversion, an equal-sized or larger result is discarded and the original is marked as checked.
 
 ### Glide
 
-Glide compression is separately opt-in and applies to supported generated cache files. It does not convert or resize images again. Only a smaller result with the same media type replaces the cache file.
+Glide compression is enabled by default and applies to supported generated cache files. You can disable it in settings; an explicitly saved Off setting remains respected. It does not convert or resize images again. Only a smaller result with the same media type replaces the cache file.
 
 With an asynchronous queue, the first request serves the unoptimized variant. Each generated size costs a compression. Clearing and regenerating the cache bills again. Glide events do not identify the source container, so the container filter does not restrict this feature.
 
@@ -65,7 +67,7 @@ With an asynchronous queue, the first request serves the unoptimized variant. Ea
 Select images in the asset library:
 
 - **Optimize with Tinify** queues optimization. Enable **Re-optimize already optimized images** to bypass the content-hash guard.
-- **Create thumbnail with Tinify** creates a uniquely named sibling, leaving the source untouched. Choose dimensions and Smart crop (`thumb`), Cover or Fit. This explicit action is available independently of the container filter.
+- **Create thumbnail with Tinify** creates a uniquely named sibling from a raster image, leaving the source untouched. Choose dimensions and Smart crop (`thumb`), Cover or Fit. This explicit action is available independently of the container filter.
 
 Both actions are also available in the individual asset editor's **⋯ menu**, after the built-in image controls. They require permission to edit the selected assets.
 

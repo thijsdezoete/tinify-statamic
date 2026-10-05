@@ -18,6 +18,7 @@ class Optimized
             'image/jpeg' => 'jpg',
             'image/webp' => 'webp',
             'image/avif' => 'avif',
+            'image/svg+xml' => 'svg',
             default => throw new UnexpectedValueException("Unsupported Tinify media type [{$this->mediaType}]."),
         };
     }

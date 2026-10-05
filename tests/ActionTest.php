@@ -24,17 +24,21 @@ class ActionTest extends TestCase
 
         foreach ([new Optimize, new CreateThumbnail] as $action) {
             $this->assertTrue($action->visibleTo($asset));
-            $this->assertFalse($action->visibleTo($container->makeAsset('vector.svg')));
+            $this->assertFalse($action->visibleTo($container->makeAsset('animation.gif')));
             $this->assertFalse($action->visibleTo($container->makeAsset('movie.mp4')));
             $this->assertFalse($action->authorize($user, $asset));
             $this->assertTrue($action->authorize($admin, $asset));
         }
+
+        $svg = $container->makeAsset('vector.svg');
+        $this->assertTrue((new Optimize)->visibleTo($svg));
+        $this->assertFalse((new CreateThumbnail)->visibleTo($svg));
     }
 
     public function test_bulk_optimization_queues_each_selected_image_with_force(): void
     {
         $first = $this->makeAsset('first.png');
-        $second = $this->makeAsset('second.png');
+        $second = $this->makeAsset('second.svg', $this->fixture('unoptimized.svg'));
         Queue::fake();
 
         (new Optimize)->run(collect([$first, $second]), ['force' => true]);

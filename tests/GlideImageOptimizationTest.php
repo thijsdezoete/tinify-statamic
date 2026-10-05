@@ -16,7 +16,6 @@ class GlideImageOptimizationTest extends TestCase
 {
     public function test_generated_image_is_queued_and_compressed_without_changing_its_dimensions(): void
     {
-        $this->configureSettings(['optimize_glide' => true]);
         $disk = Glide::cacheDisk();
         $disk->put('generated/image.png', $this->fixture('unoptimized.png'));
         Queue::fake();
@@ -44,7 +43,7 @@ class GlideImageOptimizationTest extends TestCase
         event(new GlideImageGenerated('generated/image.png', []));
         $this->configureSettings(['optimize_glide' => true]);
         event(new GlideImageGenerated('generated/animation.gif', []));
-        event(new GlideImageGenerated('generated/vector.svg', []));
+        event(new GlideImageGenerated('generated/document.pdf', []));
 
         Queue::assertNotPushed(OptimizeGlideImage::class);
     }

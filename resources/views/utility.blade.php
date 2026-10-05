@@ -21,7 +21,7 @@
         </ui-card>
     </ui-panel>
 
-    <ui-panel heading="{{ __('Asset optimization') }}" subheading="{{ __('JPEG, PNG, WebP and AVIF images in enabled containers.') }}">
+    <ui-panel heading="{{ __('Asset optimization') }}" subheading="{{ __('JPEG, PNG, WebP, AVIF and SVG images in enabled containers.') }}">
         <ui-card>
             <table class="w-full text-left">
                 <thead>

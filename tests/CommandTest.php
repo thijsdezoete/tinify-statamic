@@ -16,18 +16,20 @@ class CommandTest extends TestCase
         $pending = $this->makeAsset('pending.png');
         $marked = $this->makeAsset('marked.png', $this->fixture('optimized.png'));
         $marked->set('tinify', ['hash' => sha1($marked->contents())])->saveQuietly();
-        $this->makeAsset('vector.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');
+        $svg = $this->makeAsset('vector.svg', $this->fixture('unoptimized.svg'));
+        $this->makeAsset('unsupported.txt', 'Not an image.');
         Queue::fake();
 
         $this->artisan('statamic:tinify:optimize')->assertSuccessful();
 
-        Queue::assertPushed(OptimizeAsset::class, 1);
+        Queue::assertPushed(OptimizeAsset::class, 2);
         Queue::assertPushed(OptimizeAsset::class, fn ($job) => $job->assetId === $pending->id() && ! $job->force);
+        Queue::assertPushed(OptimizeAsset::class, fn ($job) => $job->assetId === $svg->id() && ! $job->force);
         Queue::fake();
 
         $this->artisan('statamic:tinify:optimize', ['--force' => true])->assertSuccessful();
 
-        Queue::assertPushed(OptimizeAsset::class, 2);
+        Queue::assertPushed(OptimizeAsset::class, 3);
         Queue::assertPushed(OptimizeAsset::class, fn ($job) => $job->assetId === $marked->id() && $job->force);
     }
 

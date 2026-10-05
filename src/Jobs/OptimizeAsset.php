@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use RuntimeException;
 use Statamic\Assets\ReplacementFile;
 use Statamic\Facades\Asset;
+use Statamic\Support\Svg;
 use Tinify\AccountException;
 use Tinify\ClientException;
 use Tinify\ConnectionException;
@@ -57,7 +58,8 @@ class OptimizeAsset implements ShouldQueue
             return;
         }
 
-        $convert = $settings->convertTypes();
+        $isSvg = $asset->isSvg();
+        $convert = $isSvg ? null : $settings->convertTypes();
         $mediaType = $asset->mimeType();
 
         if ($convert === [$mediaType]) {
@@ -65,15 +67,22 @@ class OptimizeAsset implements ShouldQueue
         }
 
         try {
-            $result = $client->optimize($bytes, convert: $convert, preserve: $settings->preserve());
+            $result = $client->optimize($bytes, convert: $convert, preserve: $isSvg ? [] : $settings->preserve());
+            $optimizedBytes = $result->bytes;
+
+            if ($isSvg && config('statamic.assets.svg_sanitization_on_upload', true)) {
+                // Match reupload's sanitization before hashing to prevent a second paid request.
+                $optimizedBytes = Svg::sanitize($optimizedBytes);
+            }
+
             $stats = [
-                'hash' => sha1($result->bytes),
+                'hash' => sha1($optimizedBytes),
                 'optimized_at' => now()->timestamp,
                 'original_size' => strlen($bytes),
-                'size' => strlen($result->bytes),
+                'size' => strlen($optimizedBytes),
             ];
 
-            if ($convert === null && strlen($result->bytes) >= strlen($bytes)) {
+            if ($convert === null && strlen($optimizedBytes) >= strlen($bytes)) {
                 $stats['hash'] = $hash;
                 $stats['size'] = strlen($bytes);
                 $asset->set('tinify', $stats)->saveQuietly();
@@ -88,7 +97,7 @@ class OptimizeAsset implements ShouldQueue
                 $path = 'statamic/tinify/'.Str::uuid().'.'.$asset->extension();
 
                 try {
-                    if (! $disk->put($path, $result->bytes)) {
+                    if (! $disk->put($path, $optimizedBytes)) {
                         throw new RuntimeException('Could not write the Tinify replacement file.');
                     }
 
@@ -102,7 +111,7 @@ class OptimizeAsset implements ShouldQueue
 
             $path = Images::uniqueSiblingPath($asset, $asset->filename(), $result->extension());
             $new = $asset->container()->makeAsset($path);
-            if (! $new->disk()->put($path, $result->bytes)) {
+            if (! $new->disk()->put($path, $optimizedBytes)) {
                 throw new RuntimeException('Could not write the converted Tinify asset.');
             }
             $new->data($asset->data()->all());

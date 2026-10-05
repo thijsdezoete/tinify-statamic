@@ -28,7 +28,7 @@ tabs:
             field:
               type: select
               display: Convert format
-              instructions: 'Opt-in: conversion changes file extensions and URLs. Statamic content references are updated; external URLs are not.'
+              instructions: 'Opt-in, raster images only: conversion changes file extensions and URLs. Statamic content references are updated; external URLs are not.'
               options:
                 none: Keep original format
                 smallest: Smallest supported format
@@ -41,7 +41,7 @@ tabs:
             field:
               type: toggle
               display: Optimize Glide images
-              default: false
+              default: true
               instructions: 'Compress Glide-generated images. Each generated size costs one compression; regenerating a cleared cache bills again.'
           - handle: containers
             field:

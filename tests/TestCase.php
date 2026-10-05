@@ -36,6 +36,7 @@ abstract class TestCase extends AddonTestCase
         $app['config']->set('queue.default', 'sync');
         $app['config']->set('tinify.key', 'offline-test-key');
         $app['config']->set('statamic.assets.image_manipulation.cache_path', $this->fixtureRoot.'/glide');
+        $app['config']->set('statamic.assets.image_manipulation.generate_presets_on_upload', false);
     }
 
     protected function setUp(): void

@@ -21,7 +21,7 @@ class CreateThumbnail extends Action
 
     public function visibleTo($item)
     {
-        return $item instanceof Asset && $item->extensionIsOneOf(Images::EXTENSIONS);
+        return $item instanceof Asset && $item->extensionIsOneOf(Images::RASTER_EXTENSIONS);
     }
 
     public function authorize($user, $item)

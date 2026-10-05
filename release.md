@@ -25,6 +25,7 @@ Use a clean host with a real API key and **without the preview host's fake-clien
 - Upload and replacement optimization.
 - Thumbnail creation.
 - WebP/AVIF conversion, including existing content references.
+- SVG compression, preserving the `.svg` filename and avoiding repeat requests after sanitization.
 - Bulk CLI and queued Glide compression.
 - Invalid-key/quota failures without damage to the original asset.
 

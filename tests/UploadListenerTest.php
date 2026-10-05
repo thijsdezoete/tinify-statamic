@@ -4,8 +4,13 @@ namespace Tinify\Statamic\Tests;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Storage;
+use Mockery;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\AssetContainer;
+use Statamic\Support\Svg;
+use Tinify\Statamic\Api\Client;
+use Tinify\Statamic\Api\Optimized;
 use Tinify\Statamic\Jobs\OptimizeAsset;
 
 class UploadListenerTest extends TestCase
@@ -33,6 +38,30 @@ class UploadListenerTest extends TestCase
         Queue::assertPushed(OptimizeAsset::class, fn ($job) => $job->assetId === 'assets::photo.png');
     }
 
+    public function test_svg_upload_is_compressed_without_raster_transforms_or_repeat_requests(): void
+    {
+        $this->configureSettings(['convert' => 'webp', 'preserve' => ['copyright']]);
+        $client = Mockery::mock(Client::class);
+        $client->shouldReceive('optimize')->once()
+            ->withArgs(fn ($bytes, $resize = null, $convert = null, $preserve = []) => $resize === null && $convert === null && $preserve === [])
+            ->andReturn(new Optimized($this->fixture('optimized.svg'), 'image/svg+xml'));
+        $this->app->instance(Client::class, $client);
+
+        $asset = $this->upload('vector.svg', $this->fixture('unoptimized.svg'));
+        $contents = Storage::disk('assets')->get('vector.svg');
+        $optimized = \Statamic\Facades\Asset::find($asset->id());
+        $stats = $optimized->get('tinify');
+
+        $this->assertSame(Svg::sanitize($this->fixture('optimized.svg')), $contents);
+        $this->assertEquals([16, 16], $optimized->dimensions());
+        $this->assertSame('image/svg+xml', $optimized->mimeType());
+        $this->assertSame(sha1($contents), $stats['hash']);
+        $this->assertSame(strlen($contents), $stats['size']);
+        $this->assertLessThan($stats['original_size'], $stats['size']);
+
+        OptimizeAsset::dispatch($asset->id());
+    }
+
     public function test_uploading_with_optimization_disabled_queues_nothing()
     {
         Queue::fake();
@@ -48,7 +77,6 @@ class UploadListenerTest extends TestCase
         Queue::fake();
 
         $this->upload('photo.gif');
-        $this->upload('photo.svg', '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"></svg>');
 
         Queue::assertNotPushed(OptimizeAsset::class);
     }
