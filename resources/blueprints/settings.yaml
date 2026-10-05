@@ -1,0 +1,51 @@
+title: Tinify
+tabs:
+  main:
+    display: Tinify
+    sections:
+      - fields:
+          - handle: api_key
+            field:
+              type: text
+              input_type: password
+              display: API key
+              instructions: Leave blank to use the TINIFY_API_KEY environment variable.
+          - handle: optimize_on_upload
+            field:
+              type: toggle
+              display: Optimize uploads automatically
+              default: true
+          - handle: preserve
+            field:
+              type: checkboxes
+              display: Preserve metadata
+              options:
+                copyright: Copyright
+                creation: Creation date
+                location: Location
+              default: []
+          - handle: convert
+            field:
+              type: select
+              display: Convert format
+              instructions: 'Opt-in: conversion changes file extensions and URLs. Statamic content references are updated; external URLs are not.'
+              options:
+                none: Keep original format
+                smallest: Smallest supported format
+                webp: WebP
+                avif: AVIF
+              default: none
+              clearable: false
+              validate: 'in:none,smallest,webp,avif'
+          - handle: optimize_glide
+            field:
+              type: toggle
+              display: Optimize Glide images
+              default: false
+              instructions: 'Compress Glide-generated images. Each generated size costs one compression; regenerating a cleared cache bills again.'
+          - handle: containers
+            field:
+              type: taggable
+              display: Asset containers
+              instructions: Enter container handles. Leave empty to optimize all containers.
+              default: []
