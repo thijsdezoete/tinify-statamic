@@ -18,15 +18,16 @@ Do this before publishing—the package name becomes part of users' installation
 
 ## 2. Finish release verification
 
-The offline tests and CP checks passed. **Live Tinify behavior is the main remaining verification gap.**
+The offline tests and CP checks passed, and live SVG compression has been verified. Complete the remaining real-API checks below before release.
 
-Use a clean host with a real API key and **without the preview host's fake-client provider**. Check:
+Use a clean host with a real API key and no fake-client override. Check:
 
 - Upload and replacement optimization.
 - Thumbnail creation.
 - WebP/AVIF conversion, including existing content references.
 - SVG compression, preserving the `.svg` filename and avoiding repeat requests after sanitization.
 - Bulk CLI and queued Glide compression.
+- The settings-page **Compress entire Asset library** action, including confirmation, permissions and optional re-compression.
 - Invalid-key/quota failures without damage to the original asset.
 
 Because the addon rewrites files, also perform a focused review of concurrent jobs, storage failures, and conversion safety before customer use.
@@ -46,6 +47,8 @@ The package still needs:
 Make the external-service requirements prominent: images are sent to Tinify, an API key is required, quota charges apply, originals are rewritten, and conversion can change URLs.
 
 Publish **only the addon repository**, not the preview host, API keys, or uploaded screenshots.
+
+Run `npm ci && npm run build` and include the generated `resources/dist` files in the release. Verify the settings action works in a fresh host without Node or a Vite development server.
 
 ## 4. Publish a beta through Packagist
 

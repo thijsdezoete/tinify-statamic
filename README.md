@@ -42,13 +42,24 @@ Open **Tools → Addons → Tinify**.
 | Setting | Default | Behavior |
 | --- | --- | --- |
 | API key | Environment variable | A saved key overrides `TINIFY_API_KEY`; blank uses the environment value. |
+| Tinify API credits | Read-only | Remaining account-wide credits, including extra assigned credits, alongside monthly usage. Loads automatically and can be refreshed. |
 | Optimize uploads automatically | On | Optimize new uploads and replaced files. |
 | Preserve metadata | None | Optionally retain copyright, creation date and location metadata. |
 | Convert format | Keep original | Opt into WebP, AVIF, or the smallest supported output format. |
 | Optimize Glide images | On | Compress generated variants after Glide writes them. |
-| Asset containers | All | Limit original-asset optimization to the listed container handles. |
+| Asset containers | All | Limit automatic upload optimization, **Optimize with Tinify**, the CLI and utility bulk operations. The explicit entire-library action covers all containers. |
 
 Prefer the environment variable for secrets. Statamic stores addon settings in its settings YAML; a key entered in the CP is not encrypted by this addon and must not be committed to source control.
+
+The credits display uses Tinify's reported remaining balance, not a calculation based on the free allowance. Like [Tinify's official WordPress plugin](https://github.com/tinify/wordpress-plugin/blob/master/src/class-tiny-compress-client.php), it requests `GET /keys/{key}` and reads the `Compression-Count-Remaining` and `Compression-Count` headers. It uses the saved API key, so save any key changes before clicking **Refresh**. Checking usage does not compress images; missing keys or unavailable readings are shown as unavailable, never as zero.
+
+### Compress entire Asset library
+
+The settings page includes a **Compress entire Asset library** button. It submits supported JPEG, PNG, WebP, AVIF and SVG images across every container, including containers excluded from automatic optimization. Only assets the current user can edit are included; access also requires permission to edit the Tinify addon settings.
+
+Already checked images are skipped by default. Enable **Re-compress already checked images** to process them again, using additional API quota. A confirmation is required before submitting the library.
+
+Save any settings changes before running this action: it uses the saved API key, conversion and metadata options, and the site's normal queue connection. Use an asynchronous queue and worker for large libraries. This action does not run automatically when settings are saved.
 
 ### Conversion
 
@@ -103,8 +114,12 @@ Tinify counts basic compression as one operation; resizing and conversion each a
 
 ```sh
 composer install
+npm ci
+npm run build
 vendor/bin/phpunit
 ```
+
+The settings action uses Statamic's native Vue UI components. After changing `resources/js`, run `npm run build` and include the generated `resources/dist` assets in the release. Consumer sites do not need Node or a frontend build. During development in a host site, publish the updated addon assets with `php artisan vendor:publish --provider="Tinify\Statamic\ServiceProvider" --force`.
 
 The offline suite uses real image files and Statamic assets with a fake client at the SDK boundary. It covers in-place metadata refresh, recursive event protection, conversion, destination collisions, error handling, upload triggers, actions, command selection, utility permissions and Glide cache rewriting. It does not call the live Tinify API.
 

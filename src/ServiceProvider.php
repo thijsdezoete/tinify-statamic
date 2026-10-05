@@ -11,7 +11,6 @@ use Statamic\Facades\Addon;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Utility;
 use Statamic\Providers\AddonServiceProvider;
-use Tinify\Exception;
 use Tinify\Statamic\Api\Client;
 use Tinify\Statamic\Commands\OptimizeCommand;
 use Tinify\Statamic\Http\Controllers\OptimizeAllController;
@@ -25,6 +24,11 @@ class ServiceProvider extends AddonServiceProvider
     protected $config = false;
 
     protected $viewNamespace = 'tinify';
+
+    protected $vite = [
+        'input' => ['resources/js/addon.js'],
+        'publicDirectory' => 'resources/dist',
+    ];
 
     protected $commands = [OptimizeCommand::class];
 
@@ -59,15 +63,8 @@ class ServiceProvider extends AddonServiceProvider
 
     private function utilityData(Request $request): array
     {
-        $client = app(Client::class);
+        $usage = app(Client::class)->accountUsage();
         $settings = app(Settings::class);
-        $keyValid = false;
-
-        try {
-            $keyValid = $settings->apiKey() ? $client->validate() : false;
-        } catch (Exception) {
-            // Invalid credentials and temporary API outages must not break the CP.
-        }
 
         $containers = [];
         $bytesSaved = 0;
@@ -103,8 +100,7 @@ class ServiceProvider extends AddonServiceProvider
         }
 
         return [
-            'keyValid' => $keyValid,
-            'compressionCount' => $keyValid ? $client->compressionCount() : null,
+            ...$usage,
             'containers' => $containers,
             'bytesSaved' => $bytesSaved,
             'settingsUrl' => Addon::get('tinify/statamic')->settingsUrl(),

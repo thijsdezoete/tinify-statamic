@@ -28,7 +28,12 @@ class OptimizeAsset implements ShouldQueue
 
     public int $tries = 3;
 
-    public function __construct(public string $assetId, public bool $force = false) {}
+    public bool $ignoreContainerFilter = false;
+
+    public function __construct(public string $assetId, public bool $force = false, bool $ignoreContainerFilter = false)
+    {
+        $this->ignoreContainerFilter = $ignoreContainerFilter;
+    }
 
     public function backoff(): array
     {
@@ -39,7 +44,11 @@ class OptimizeAsset implements ShouldQueue
     {
         $asset = Asset::find($this->assetId);
 
-        if (! $asset || ! $asset->extensionIsOneOf(Images::EXTENSIONS) || ! $settings->appliesTo($asset->container())) {
+        if (! $asset || ! $asset->extensionIsOneOf(Images::EXTENSIONS)) {
+            return;
+        }
+
+        if (! $this->ignoreContainerFilter && ! $settings->appliesTo($asset->container())) {
             return;
         }
 

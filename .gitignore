@@ -4,3 +4,5 @@
 /.phpunit.result.cache
 /.env
 /.DS_Store
+/node_modules/
+/resources/dist/hot

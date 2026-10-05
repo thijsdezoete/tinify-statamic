@@ -10,6 +10,11 @@ tabs:
               input_type: password
               display: API key
               instructions: Leave blank to use the TINIFY_API_KEY environment variable.
+          - handle: api_credits
+            field:
+              type: tinify_api_credits
+              display: Tinify API credits
+              visibility: computed
           - handle: optimize_on_upload
             field:
               type: toggle
@@ -49,3 +54,11 @@ tabs:
               display: Asset containers
               instructions: Enter container handles. Leave empty to optimize all containers.
               default: []
+      - display: Asset library
+        fields:
+          - handle: compress_library
+            field:
+              type: tinify_compress_library
+              display: Compress entire Asset library
+              hide_display: true
+              visibility: computed
