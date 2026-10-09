@@ -46,8 +46,8 @@ tabs:
             field:
               type: toggle
               display: Optimize Glide images
-              default: true
-              instructions: 'Compress Glide-generated images. Each generated size costs one compression; regenerating a cleared cache bills again.'
+              default: false
+              instructions: 'Off by default. Compress Glide-generated images. Each generated size costs one compression, so paid plans may be billed for every variant; regenerating a cleared cache bills again.'
           - handle: containers
             field:
               type: taggable

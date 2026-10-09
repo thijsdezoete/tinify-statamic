@@ -2,6 +2,8 @@
 
 Automatic image optimization for Statamic 6, powered by the [TinyPNG](https://tinypng.com) API.
 
+This is an unofficial, community-maintained integration. It is not affiliated with or endorsed by Tinify B.V.; it only uses their public SDK.
+
 Upload an image, and it is compressed in place before anyone sees it. Optionally convert to WebP or AVIF, compress Glide-generated variants, create smart-cropped thumbnails, and bulk-optimize an existing library from the Control Panel or the command line.
 
 Supported formats: JPEG, PNG, WebP, AVIF and SVG. GIF files are skipped.
@@ -84,7 +86,7 @@ Open **Tools → Addons → Tinify**.
 | Optimize uploads automatically | On | Optimize new uploads and replaced files. |
 | Preserve metadata | None | Keep copyright, creation date and/or location metadata. Free, raster images only. |
 | Convert format | Keep original | Convert raster images to WebP, AVIF, or whichever supported format is smallest. See [Format conversion](#format-conversion). |
-| Optimize Glide images | On | Compress Glide-generated variants after they are written. See [Glide images](#glide-images). |
+| Optimize Glide images | Off | Compress Glide-generated variants after they are written. Every variant costs one compression. See [Glide images](#glide-images). |
 | Asset containers | All | Limit automatic optimization, the **Optimize with Tinify** action, the CLI and the utility to these container handles. The **Compress entire Asset library** button ignores this filter. |
 
 Prefer the environment variable for the API key. Statamic stores addon settings as YAML in your repository, and a key entered in the Control Panel is not encrypted. Do not commit it.
@@ -93,7 +95,7 @@ The credits widget reads your real remaining balance from Tinify, the same way t
 
 ### Compress entire Asset library
 
-This button on the settings page queues every supported image across all containers, including containers excluded from automatic optimization. Only assets the current user can edit are included, and the user needs permission to edit Tinify settings.
+This button on the settings page dispatches one background job that walks every supported image across all containers, including containers excluded from automatic optimization, and queues an optimization job per image. Only assets the current user can edit are included, and the user needs permission to edit Tinify settings. On the sync queue driver the whole walk runs inside the request, so use a queue worker for large libraries.
 
 Already optimized images are skipped unless you enable **Re-compress already checked images**, which uses additional credits. You will be asked to confirm before anything is queued.
 
@@ -145,7 +147,9 @@ Images with a stored optimization hash are treated as done without re-reading th
 
 ## Format conversion
 
-Conversion is opt-in because it changes file extensions and therefore URLs. When enabled, Statamic replaces the asset and updates references in managed content. Hard-coded or external URLs are not rewritten.
+Conversion is opt-in because it changes file extensions and therefore URLs. When enabled, Statamic replaces the asset and updates references in saved content. Hard-coded or external URLs are not rewritten.
+
+Uploads are never converted, only compressed in place. An image uploaded from an entry editor is referenced by the unsaved entry under its original path, and Statamic can only rewrite references in content that has already been saved. Converting at upload time would delete the original file before the entry is saved and leave it pointing at a missing image. Run conversion afterwards through the **Optimize with Tinify** action, the CLI or the **Compress entire Asset library** button, which operate on saved content.
 
 The basename is kept: `photo.png` becomes `photo.webp`. If that path already exists, a suffix such as `photo-1.webp` is used so no other asset is overwritten.
 
@@ -153,11 +157,11 @@ If the image is already in the requested format, the paid conversion step is ski
 
 ## Glide images
 
-When enabled, each Glide-generated variant is compressed after Glide writes it to the cache. The variant is not resized or converted again. Only a smaller result of the same media type replaces the cached file.
+Off by default because every generated size costs one compression, which paid Tinify plans bill for. When enabled, each Glide-generated variant is compressed after Glide writes it to the cache. The variant is not resized or converted again. Only a smaller result of the same media type replaces the cached file.
 
 With an asynchronous queue, the first request serves the unoptimized variant and the compressed version lands once the job runs.
 
-Every generated size costs one compression, and clearing the Glide cache bills again when variants are regenerated. Glide events do not identify the source container, so the container filter does not apply here. Turn this setting off if your site generates many sizes and you want to conserve credits.
+Every generated size costs one compression, and clearing the Glide cache bills again when variants are regenerated. Glide events do not identify the source container, so the container filter does not apply here. Leave this setting off if your site generates many sizes and you want to conserve credits.
 
 ## Queues and error handling
 
@@ -203,7 +207,7 @@ The Control Panel components in `resources/js` use Statamic's native Vue UI libr
 When developing inside a host site, republish the built assets with:
 
 ```sh
-php artisan vendor:publish --provider="Tinify\Statamic\ServiceProvider" --force
+php artisan vendor:publish --provider="ThijsDeZoete\TinifyStatamic\ServiceProvider" --force
 ```
 
 The test suite runs offline against real image files and Statamic assets, with a fake client at the SDK boundary. It covers in-place rewriting and metadata refresh, event loop protection, conversion and destination collisions, error handling, upload triggers, CP actions, the CLI, utility permissions and Glide cache rewriting. No test calls the live API.

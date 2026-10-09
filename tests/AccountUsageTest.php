@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic\Tests;
+namespace ThijsDeZoete\TinifyStatamic\Tests;
 
 use Illuminate\Support\Facades\Gate;
 use Mockery;
@@ -9,7 +9,7 @@ use ReflectionMethod;
 use Statamic\Facades\User;
 use Tinify\Client as SdkClient;
 use Tinify\ConnectionException;
-use Tinify\Statamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
 use Tinify\Tinify;
 
 class AccountUsageTest extends TestCase

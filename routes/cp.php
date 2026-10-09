@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Tinify\Statamic\Http\Controllers\AccountUsageController;
-use Tinify\Statamic\Http\Controllers\CompressLibraryController;
+use ThijsDeZoete\TinifyStatamic\Http\Controllers\AccountUsageController;
+use ThijsDeZoete\TinifyStatamic\Http\Controllers\CompressLibraryController;
 
 Route::group(['prefix' => 'tinify', 'as' => 'tinify.'], function () {
     Route::get('account-usage', AccountUsageController::class)->name('account-usage');

@@ -1,10 +1,10 @@
 <?php
 
-namespace Tinify\Statamic\Http\Controllers;
+namespace ThijsDeZoete\TinifyStatamic\Http\Controllers;
 
 use Statamic\Facades\Addon;
 use Statamic\Http\Controllers\CP\CpController;
-use Tinify\Statamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
 
 class AccountUsageController extends CpController
 {

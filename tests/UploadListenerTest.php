@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic\Tests;
+namespace ThijsDeZoete\TinifyStatamic\Tests;
 
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Queue;
@@ -9,9 +9,9 @@ use Mockery;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\AssetContainer;
 use Statamic\Support\Svg;
-use Tinify\Statamic\Api\Client;
-use Tinify\Statamic\Api\Optimized;
-use Tinify\Statamic\Jobs\OptimizeAsset;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Api\Optimized;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeAsset;
 
 class UploadListenerTest extends TestCase
 {
@@ -79,5 +79,21 @@ class UploadListenerTest extends TestCase
         $this->upload('photo.gif');
 
         Queue::assertNotPushed(OptimizeAsset::class);
+    }
+
+    public function test_upload_triggered_jobs_compress_in_place_and_never_convert(): void
+    {
+        $this->configureSettings(['convert' => 'webp']);
+        $client = Mockery::mock(Client::class);
+        $client->shouldReceive('optimize')->once()
+            ->withArgs(fn ($bytes, $resize = null, $convert = null) => $convert === null)
+            ->andReturn(new Optimized($this->fixture('optimized.png'), 'image/png'));
+        $this->app->instance(Client::class, $client);
+
+        $png = $this->upload('photo.png', $this->fixture('unoptimized.png'));
+
+        $this->assertSame($this->fixture('optimized.png'), Storage::disk('assets')->get('photo.png'));
+        $this->assertFalse(Storage::disk('assets')->exists('photo.webp'));
+        $this->assertNotNull(\Statamic\Facades\Asset::find('assets::photo.png'));
     }
 }

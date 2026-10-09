@@ -1,14 +1,14 @@
 <?php
 
-namespace Tinify\Statamic\Tests;
+namespace ThijsDeZoete\TinifyStatamic\Tests;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
 use Statamic\Facades\User;
-use Tinify\Statamic\Http\Controllers\OptimizeAllController;
-use Tinify\Statamic\Jobs\OptimizeAsset;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Http\Controllers\OptimizeAllController;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeAsset;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 
 class UtilityTest extends TestCase
 {

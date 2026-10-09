@@ -1,13 +1,13 @@
 <?php
 
-namespace Tinify\Statamic\Commands;
+namespace ThijsDeZoete\TinifyStatamic\Commands;
 
 use Illuminate\Console\Command;
 use Statamic\Console\RunsInPlease;
 use Statamic\Facades\AssetContainer;
-use Tinify\Statamic\Jobs\OptimizeAsset;
-use Tinify\Statamic\Support\Images;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeAsset;
+use ThijsDeZoete\TinifyStatamic\Support\Images;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 
 class OptimizeCommand extends Command
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic\Support;
+namespace ThijsDeZoete\TinifyStatamic\Support;
 
 use Statamic\Contracts\Assets\Asset;
 

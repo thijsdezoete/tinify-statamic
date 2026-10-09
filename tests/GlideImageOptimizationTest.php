@@ -1,21 +1,22 @@
 <?php
 
-namespace Tinify\Statamic\Tests;
+namespace ThijsDeZoete\TinifyStatamic\Tests;
 
 use Illuminate\Support\Facades\Queue;
 use Mockery;
 use Statamic\Events\GlideImageGenerated;
 use Statamic\Facades\Glide;
 use Tinify\ConnectionException;
-use Tinify\Statamic\Api\Client;
-use Tinify\Statamic\Api\Optimized;
-use Tinify\Statamic\Jobs\OptimizeGlideImage;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Api\Optimized;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeGlideImage;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 
 class GlideImageOptimizationTest extends TestCase
 {
     public function test_generated_image_is_queued_and_compressed_without_changing_its_dimensions(): void
     {
+        $this->configureSettings(['optimize_glide' => true]);
         $disk = Glide::cacheDisk();
         $disk->put('generated/image.png', $this->fixture('unoptimized.png'));
         Queue::fake();

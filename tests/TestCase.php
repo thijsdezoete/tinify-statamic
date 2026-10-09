@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic\Tests;
+namespace ThijsDeZoete\TinifyStatamic\Tests;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -11,7 +11,7 @@ use Statamic\Contracts\Assets\Asset;
 use Statamic\Facades\Addon;
 use Statamic\Facades\AssetContainer;
 use Statamic\Testing\AddonTestCase;
-use Tinify\Statamic\ServiceProvider;
+use ThijsDeZoete\TinifyStatamic\ServiceProvider;
 
 abstract class TestCase extends AddonTestCase
 {

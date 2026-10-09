@@ -1,14 +1,14 @@
 <?php
 
-namespace Tinify\Statamic\Actions;
+namespace ThijsDeZoete\TinifyStatamic\Actions;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Statamic\Actions\Action;
 use Statamic\Contracts\Assets\Asset;
 use Tinify\Exception;
-use Tinify\Statamic\Api\Client;
-use Tinify\Statamic\Support\Images;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Support\Images;
 
 class CreateThumbnail extends Action
 {

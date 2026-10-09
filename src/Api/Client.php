@@ -1,11 +1,11 @@
 <?php
 
-namespace Tinify\Statamic\Api;
+namespace ThijsDeZoete\TinifyStatamic\Api;
 
 use Tinify\AccountException;
 use Tinify\Exception;
 use Tinify\Source;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 use Tinify\Tinify;
 
 class Client

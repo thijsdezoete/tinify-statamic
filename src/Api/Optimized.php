@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic\Api;
+namespace ThijsDeZoete\TinifyStatamic\Api;
 
 use UnexpectedValueException;
 

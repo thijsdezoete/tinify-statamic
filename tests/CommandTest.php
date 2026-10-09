@@ -1,13 +1,13 @@
 <?php
 
-namespace Tinify\Statamic\Tests;
+namespace ThijsDeZoete\TinifyStatamic\Tests;
 
 use Illuminate\Support\Facades\Queue;
 use Mockery;
 use Statamic\Facades\Asset;
-use Tinify\Statamic\Api\Client;
-use Tinify\Statamic\Api\Optimized;
-use Tinify\Statamic\Jobs\OptimizeAsset;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Api\Optimized;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeAsset;
 
 class CommandTest extends TestCase
 {

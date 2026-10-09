@@ -1,15 +1,15 @@
 <?php
 
-namespace Tinify\Statamic\Tests;
+namespace ThijsDeZoete\TinifyStatamic\Tests;
 
 use Illuminate\Support\Facades\Log;
 use Mockery;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Glide;
-use Tinify\Statamic\Api\Client;
-use Tinify\Statamic\Jobs\OptimizeAsset;
-use Tinify\Statamic\Jobs\OptimizeGlideImage;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeAsset;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeGlideImage;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 
 class SettingsTest extends TestCase
 {
@@ -37,6 +37,12 @@ class SettingsTest extends TestCase
 
         $this->configureSettings(['containers' => []]);
         $this->assertTrue($settings->appliesTo($container));
+    }
+
+    public function test_glide_optimization_is_off_by_default_because_every_variant_bills(): void
+    {
+        $this->configureSettings([]);
+        $this->assertFalse(app(Settings::class)->optimizeGlide());
     }
 
     public function test_missing_key_skips_both_job_types_and_logs_only_once(): void

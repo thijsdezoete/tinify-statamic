@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic\Fieldtypes;
+namespace ThijsDeZoete\TinifyStatamic\Fieldtypes;
 
 use Statamic\Fields\Fieldtype;
 

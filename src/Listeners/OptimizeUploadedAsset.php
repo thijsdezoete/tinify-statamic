@@ -1,10 +1,10 @@
 <?php
 
-namespace Tinify\Statamic\Listeners;
+namespace ThijsDeZoete\TinifyStatamic\Listeners;
 
-use Tinify\Statamic\Jobs\OptimizeAsset;
-use Tinify\Statamic\Support\Images;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeAsset;
+use ThijsDeZoete\TinifyStatamic\Support\Images;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 
 class OptimizeUploadedAsset
 {
@@ -20,6 +20,7 @@ class OptimizeUploadedAsset
             return;
         }
 
-        OptimizeAsset::dispatch($asset->id());
+        // Never convert here: the entry editor still holds the uploaded path and has not saved it yet.
+        OptimizeAsset::dispatch($asset->id(), convert: false);
     }
 }

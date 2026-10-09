@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic\Jobs;
+namespace ThijsDeZoete\TinifyStatamic\Jobs;
 
 use finfo;
 use Illuminate\Bus\Queueable;
@@ -14,9 +14,9 @@ use Tinify\AccountException;
 use Tinify\ClientException;
 use Tinify\ConnectionException;
 use Tinify\ServerException;
-use Tinify\Statamic\Api\Client;
-use Tinify\Statamic\Support\Images;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Support\Images;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 
 class OptimizeGlideImage implements ShouldQueue
 {

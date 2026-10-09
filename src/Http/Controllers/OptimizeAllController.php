@@ -1,14 +1,14 @@
 <?php
 
-namespace Tinify\Statamic\Http\Controllers;
+namespace ThijsDeZoete\TinifyStatamic\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Statamic\Facades\AssetContainer;
 use Statamic\Http\Controllers\CP\CpController;
-use Tinify\Statamic\Jobs\OptimizeAsset;
-use Tinify\Statamic\Support\Images;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeAsset;
+use ThijsDeZoete\TinifyStatamic\Support\Images;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 
 class OptimizeAllController extends CpController
 {

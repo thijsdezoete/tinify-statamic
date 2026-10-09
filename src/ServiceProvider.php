@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic;
+namespace ThijsDeZoete\TinifyStatamic;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
@@ -11,13 +11,13 @@ use Statamic\Facades\Addon;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\Utility;
 use Statamic\Providers\AddonServiceProvider;
-use Tinify\Statamic\Api\Client;
-use Tinify\Statamic\Commands\OptimizeCommand;
-use Tinify\Statamic\Http\Controllers\OptimizeAllController;
-use Tinify\Statamic\Listeners\OptimizeGeneratedGlideImage;
-use Tinify\Statamic\Listeners\OptimizeUploadedAsset;
-use Tinify\Statamic\Support\Images;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Commands\OptimizeCommand;
+use ThijsDeZoete\TinifyStatamic\Http\Controllers\OptimizeAllController;
+use ThijsDeZoete\TinifyStatamic\Listeners\OptimizeGeneratedGlideImage;
+use ThijsDeZoete\TinifyStatamic\Listeners\OptimizeUploadedAsset;
+use ThijsDeZoete\TinifyStatamic\Support\Images;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 
 class ServiceProvider extends AddonServiceProvider
 {

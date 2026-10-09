@@ -1,10 +1,10 @@
 <?php
 
-namespace Tinify\Statamic\Listeners;
+namespace ThijsDeZoete\TinifyStatamic\Listeners;
 
-use Tinify\Statamic\Jobs\OptimizeGlideImage;
-use Tinify\Statamic\Support\Images;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeGlideImage;
+use ThijsDeZoete\TinifyStatamic\Support\Images;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 
 class OptimizeGeneratedGlideImage
 {

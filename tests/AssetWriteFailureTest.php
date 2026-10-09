@@ -1,16 +1,16 @@
 <?php
 
-namespace Tinify\Statamic\Tests;
+namespace ThijsDeZoete\TinifyStatamic\Tests;
 
 use Illuminate\Support\Facades\Event;
 use Mockery;
 use RuntimeException;
 use Statamic\Events\AssetSaving;
 use Statamic\Facades\Asset;
-use Tinify\Statamic\Api\Client;
-use Tinify\Statamic\Api\Optimized;
-use Tinify\Statamic\Jobs\OptimizeAsset;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Api\Optimized;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeAsset;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 
 class AssetWriteFailureTest extends TestCase
 {

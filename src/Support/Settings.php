@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic\Support;
+namespace ThijsDeZoete\TinifyStatamic\Support;
 
 use Statamic\Contracts\Assets\AssetContainer;
 use Statamic\Facades\Addon;
@@ -21,7 +21,7 @@ class Settings
 
     public function optimizeGlide(): bool
     {
-        return (bool) $this->get('optimize_glide', true);
+        return (bool) $this->get('optimize_glide', false);
     }
 
     public function preserve(): array

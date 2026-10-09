@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic\Tests;
+namespace ThijsDeZoete\TinifyStatamic\Tests;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
@@ -8,9 +8,10 @@ use Illuminate\Support\Facades\Storage;
 use Mockery;
 use Statamic\Facades\AssetContainer;
 use Statamic\Facades\User;
-use Tinify\Statamic\Api\Client;
-use Tinify\Statamic\Api\Optimized;
-use Tinify\Statamic\Jobs\OptimizeAsset;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Api\Optimized;
+use ThijsDeZoete\TinifyStatamic\Jobs\CompressLibrary;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeAsset;
 
 class CompressLibraryTest extends TestCase
 {
@@ -22,7 +23,7 @@ class CompressLibraryTest extends TestCase
 
         $this->postJson(cp_route('tinify.compress-library'))->assertForbidden();
 
-        Queue::assertNotPushed(OptimizeAsset::class);
+        Queue::assertNotPushed(CompressLibrary::class);
     }
 
     public function test_library_compression_reaches_excluded_containers_but_respects_asset_permissions(): void
@@ -41,7 +42,7 @@ class CompressLibraryTest extends TestCase
         $excluded->save();
         $this->configureSettings(['containers' => ['assets']]);
 
-        $this->actingAs(User::make()->id('editor')->email('editor@example.test'));
+        $this->actingAs(tap(User::make()->id('editor')->email('editor@example.test'))->save());
         Gate::before(function ($user, $ability, $arguments) use ($denied) {
             if (in_array($ability, ['access cp', 'editSettings'], true)) {
                 return true;
@@ -51,11 +52,11 @@ class CompressLibraryTest extends TestCase
         });
         Queue::fake();
 
-        $this->postJson(cp_route('tinify.compress-library'), ['force' => false])
-            ->assertSuccessful()
-            ->assertJsonPath('queued', 2)
-            ->assertJsonPath('skipped', 1);
+        $this->postJson(cp_route('tinify.compress-library'), ['force' => false])->assertSuccessful();
 
+        // One job leaves the request; it fans out the per-asset jobs off the request thread.
+        Queue::assertPushed(CompressLibrary::class, 1);
+        $this->app->call([Queue::pushed(CompressLibrary::class)->first(), 'handle']);
         Queue::assertPushed(OptimizeAsset::class, 2);
         Queue::assertPushed(OptimizeAsset::class, fn ($job) => $job->assetId === $pending->id());
         Queue::assertPushed(OptimizeAsset::class, fn ($job) => $job->assetId === $excluded->id());
@@ -76,13 +77,12 @@ class CompressLibraryTest extends TestCase
     {
         $asset = $this->makeAsset('checked.png');
         $asset->set('tinify', ['hash' => sha1($asset->contents())])->saveQuietly();
-        $this->actingAs(User::make()->id('admin')->email('admin@example.test')->makeSuper());
+        $this->actingAs(tap(User::make()->id('admin')->email('admin@example.test')->makeSuper())->save());
         Queue::fake();
 
-        $this->postJson(cp_route('tinify.compress-library'), ['force' => true])
-            ->assertSuccessful()
-            ->assertJsonPath('queued', 1)
-            ->assertJsonPath('skipped', 0);
+        $this->postJson(cp_route('tinify.compress-library'), ['force' => true])->assertSuccessful();
+        $this->app->call([Queue::pushed(CompressLibrary::class)->first(), 'handle']);
+        Queue::assertPushed(OptimizeAsset::class, 1);
 
         $client = Mockery::mock(Client::class);
         $client->shouldReceive('optimize')->once()
@@ -113,7 +113,7 @@ class CompressLibraryTest extends TestCase
     public function test_invalid_force_and_missing_api_key_do_not_queue_work(): void
     {
         $this->makeAsset();
-        $this->actingAs(User::make()->id('admin')->email('admin@example.test')->makeSuper());
+        $this->actingAs(tap(User::make()->id('admin')->email('admin@example.test')->makeSuper())->save());
         Queue::fake();
 
         $this->postJson(cp_route('tinify.compress-library'), ['force' => 'unexpected'])
@@ -126,6 +126,6 @@ class CompressLibraryTest extends TestCase
             ->assertUnprocessable()
             ->assertJsonValidationErrors('api_key');
 
-        Queue::assertNotPushed(OptimizeAsset::class);
+        Queue::assertNotPushed(CompressLibrary::class);
     }
 }

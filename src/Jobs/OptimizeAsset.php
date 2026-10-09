@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic\Jobs;
+namespace ThijsDeZoete\TinifyStatamic\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,9 +18,9 @@ use Tinify\AccountException;
 use Tinify\ClientException;
 use Tinify\ConnectionException;
 use Tinify\ServerException;
-use Tinify\Statamic\Api\Client;
-use Tinify\Statamic\Support\Images;
-use Tinify\Statamic\Support\Settings;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Support\Images;
+use ThijsDeZoete\TinifyStatamic\Support\Settings;
 
 class OptimizeAsset implements ShouldQueue
 {
@@ -30,9 +30,17 @@ class OptimizeAsset implements ShouldQueue
 
     public bool $ignoreContainerFilter = false;
 
-    public function __construct(public string $assetId, public bool $force = false, bool $ignoreContainerFilter = false)
+    /**
+     * False for upload-triggered jobs: converting changes the asset path and deletes the original,
+     * which breaks unsaved entries still holding the uploaded path.
+     */
+    public bool $convert = true;
+
+    // Non-promoted so jobs serialized before these flags existed unserialize with the defaults above.
+    public function __construct(public string $assetId, public bool $force = false, bool $ignoreContainerFilter = false, bool $convert = true)
     {
         $this->ignoreContainerFilter = $ignoreContainerFilter;
+        $this->convert = $convert;
     }
 
     public function backoff(): array
@@ -68,7 +76,7 @@ class OptimizeAsset implements ShouldQueue
         }
 
         $isSvg = $asset->isSvg();
-        $convert = $isSvg ? null : $settings->convertTypes();
+        $convert = $isSvg || ! $this->convert ? null : $settings->convertTypes();
         $mediaType = $asset->mimeType();
 
         if ($convert === [$mediaType]) {

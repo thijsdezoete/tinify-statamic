@@ -1,11 +1,11 @@
 <?php
 
-namespace Tinify\Statamic\Actions;
+namespace ThijsDeZoete\TinifyStatamic\Actions;
 
 use Statamic\Actions\Action;
 use Statamic\Contracts\Assets\Asset;
-use Tinify\Statamic\Jobs\OptimizeAsset;
-use Tinify\Statamic\Support\Images;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeAsset;
+use ThijsDeZoete\TinifyStatamic\Support\Images;
 
 class Optimize extends Action
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tinify\Statamic\Tests;
+namespace ThijsDeZoete\TinifyStatamic\Tests;
 
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -11,9 +11,9 @@ use Statamic\Events\AssetReuploaded;
 use Statamic\Facades\Asset;
 use Statamic\Facades\YAML;
 use Tinify\AccountException;
-use Tinify\Statamic\Api\Client;
-use Tinify\Statamic\Api\Optimized;
-use Tinify\Statamic\Jobs\OptimizeAsset;
+use ThijsDeZoete\TinifyStatamic\Api\Client;
+use ThijsDeZoete\TinifyStatamic\Api\Optimized;
+use ThijsDeZoete\TinifyStatamic\Jobs\OptimizeAsset;
 
 class OptimizeAssetTest extends TestCase
 {

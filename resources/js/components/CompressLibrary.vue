@@ -26,10 +26,6 @@ async function compress() {
         const { data } = await $axios.post(props.meta.url, { force: force.value });
         message.value = data.message;
 
-        if (data.skipped > 0) {
-            message.value += ' ' + __(':count already checked images skipped.', { count: data.skipped });
-        }
-
         Statamic.$toast.success(message.value);
     } catch (exception) {
         const errors = Object.values(exception.response?.data?.errors ?? {}).flat();

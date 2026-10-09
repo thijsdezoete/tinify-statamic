@@ -1,6 +1,6 @@
 {
     "name": "thijsdezoete/tinify-statamic",
-    "description": "Automatic image optimization, conversion and thumbnails powered by TinyPNG",
+    "description": "Unofficial Statamic integration for the TinyPNG / Tinify API: automatic image optimization, conversion and thumbnails",
     "type": "statamic-addon",
     "license": "MIT",
     "homepage": "https://github.com/thijsdezoete/tinify-statamic",
@@ -25,22 +25,22 @@
     },
     "autoload": {
         "psr-4": {
-            "Tinify\\Statamic\\": "src/"
+            "ThijsDeZoete\\TinifyStatamic\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tinify\\Statamic\\Tests\\": "tests/"
+            "ThijsDeZoete\\TinifyStatamic\\Tests\\": "tests/"
         }
     },
     "extra": {
         "statamic": {
-            "name": "Tinify",
-            "description": "Automatic image optimization, conversion and thumbnails powered by TinyPNG"
+            "name": "Tinify for Statamic",
+            "description": "Unofficial integration for the TinyPNG / Tinify API: automatic image optimization, conversion and thumbnails"
         },
         "laravel": {
             "providers": [
-                "Tinify\\Statamic\\ServiceProvider"
+                "ThijsDeZoete\\TinifyStatamic\\ServiceProvider"
             ]
         }
     },
