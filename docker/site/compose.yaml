@@ -1,0 +1,11 @@
+services:
+  site:
+    build:
+      context: ../..
+      dockerfile: docker/site/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ASSET_COUNT: ${ASSET_COUNT:-5000}
+    volumes:
+      - ./seed.php:/seed.php:ro
