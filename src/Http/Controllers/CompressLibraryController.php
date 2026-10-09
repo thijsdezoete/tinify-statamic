@@ -15,7 +15,7 @@ class CompressLibraryController extends CpController
 {
     public function __invoke(Request $request, Settings $settings): array
     {
-        $this->authorize('editSettings', Addon::get('tinify/statamic'));
+        $this->authorize('editSettings', Addon::get('thijsdezoete/tinify-statamic'));
 
         $request->validate(['force' => 'sometimes|boolean']);
         $force = $request->boolean('force');

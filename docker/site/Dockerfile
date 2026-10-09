@@ -17,7 +17,7 @@ COPY resources /addon/resources
 COPY routes /addon/routes
 COPY src /addon/src
 RUN composer config repositories.tinify path /addon \
- && composer require tinify/statamic:@dev --no-interaction \
+ && composer require thijsdezoete/tinify-statamic:@dev --no-interaction \
  && sed -i 's#^APP_URL=.*#APP_URL=http://localhost:8080#' .env
 # The starter kit defaults to Eloquent users without a model; flat-file users are enough here.
 RUN sed -i "s/'repository' => 'eloquent'/'repository' => 'file'/" config/statamic/users.php \

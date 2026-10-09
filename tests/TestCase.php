@@ -47,9 +47,9 @@ abstract class TestCase extends AddonTestCase
         Storage::fake('local');
         AssetContainer::make('assets')->disk('assets')->title('Assets')->save();
 
-        $this->addonSettings = app(SettingsRepository::class)->make(Addon::get('tinify/statamic'));
+        $this->addonSettings = app(SettingsRepository::class)->make(Addon::get('thijsdezoete/tinify-statamic'));
         $repository = Mockery::mock(SettingsRepository::class);
-        $repository->shouldReceive('find')->with('tinify/statamic')->andReturn($this->addonSettings);
+        $repository->shouldReceive('find')->with('thijsdezoete/tinify-statamic')->andReturn($this->addonSettings);
         $this->app->instance(SettingsRepository::class, $repository);
     }
 

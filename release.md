@@ -4,7 +4,7 @@ The release path is **GitHub → Packagist → Statamic Marketplace**. Start wit
 
 ## 1. Confirm ownership, name, and license
 
-**Check the Composer vendor name first.** The package currently uses `tinify/statamic`. Packagist protects existing vendor namespaces: publishing under `tinify/` requires your account to maintain a package in that namespace. If this is an official Tinify release, arrange that access; otherwise use a vendor namespace you control.
+**Package name.** The package is published as `thijsdezoete/tinify-statamic` on Packagist. The Composer name and the marketplace listing must match it exactly.
 
 See [Packagist's naming rules](https://packagist.org/about#naming-your-package).
 

@@ -10,7 +10,7 @@ class AccountUsageController extends CpController
 {
     public function __invoke(Client $client): array
     {
-        $this->authorize('editSettings', Addon::get('tinify/statamic'));
+        $this->authorize('editSettings', Addon::get('thijsdezoete/tinify-statamic'));
 
         return $client->accountUsage();
     }

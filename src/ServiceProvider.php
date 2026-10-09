@@ -103,7 +103,7 @@ class ServiceProvider extends AddonServiceProvider
             ...$usage,
             'containers' => $containers,
             'bytesSaved' => $bytesSaved,
-            'settingsUrl' => Addon::get('tinify/statamic')->settingsUrl(),
+            'settingsUrl' => Addon::get('thijsdezoete/tinify-statamic')->settingsUrl(),
         ];
     }
 }

@@ -1,6 +1,6 @@
 # Statamic 6 test site for the Tinify addon
 
-Fresh `statamic/statamic` site (Solo mode) with this checkout installed as `tinify/statamic` from `/addon`.
+Fresh `statamic/statamic` site (Solo mode) with this checkout installed as `thijsdezoete/tinify-statamic` from `/addon`.
 Serves on http://localhost:8080 via `php artisan serve`. CP login: `admin@example.com` / `password`.
 
 Run from the repo root:

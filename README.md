@@ -32,7 +32,7 @@ Supported formats: JPEG, PNG, WebP, AVIF and SVG. GIF files are skipped.
 ## Installation
 
 ```sh
-composer require tinify/statamic
+composer require thijsdezoete/tinify-statamic
 ```
 
 Add your API key to the site's `.env`:
@@ -49,7 +49,7 @@ To develop against the addon from a sibling directory, run this from the host si
 
 ```sh
 composer config repositories.tinify path ../tinify-statamic
-composer require tinify/statamic:@dev
+composer require thijsdezoete/tinify-statamic:@dev
 ```
 
 ## Quick start

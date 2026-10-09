@@ -51,6 +51,6 @@ class Settings
 
     private function get(string $key, mixed $default = null): mixed
     {
-        return Addon::get('tinify/statamic')->settings()->get($key, $default);
+        return Addon::get('thijsdezoete/tinify-statamic')->settings()->get($key, $default);
     }
 }
